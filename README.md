@@ -52,20 +52,20 @@ class Solution:
 2. Init `Priority queue` `pq` to store potential min nodes
 3. While `pq`:
    1. Pop nim node from `pq`
-   2. Set all adjacent nodes new distance = cur distance (it's minimal) + edge distances. Set only if it's less than current adjacent node distance
+   2. Set all adjacent nodes new distance = `cur distance (it's minimal) + edge distances`. Set only if it's less than current adjacent node distance
    3. Add all adjacent nodes to `pq` with updated distances
 
 #### Finding path
 
 Backtrack from end node to start node:
 
-- On each iteration pick adjacent nodes to current
-- Set current to minimal
-- Add new node to result array
-- return reversed array
+1. On each iteration pick adjacent nodes to current
+2. Set current to minimal
+3. Add new node to result array
+4. Return reversed array
 
 Instead of backtracking, we can set `parent` nodes during main Dijkstra's algorithm. When it's finished:
 
-- Pick end node
-- Iteratively go to parent and remember current node (push it to result array)
-- return reversed array
+1. Pick end node
+2. Iteratively go to parent and remember current node (push it to result array)
+3. return reversed array
