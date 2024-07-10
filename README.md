@@ -52,7 +52,7 @@ class Solution:
 2. Init `Priority queue` `pq` to store potential min nodes
 3. While `pq`:
    1. Pop nim node from `pq`
-   2. Set all adjacent nodes new distance = `cur distance (it's minimal) + edge distances`. Set only if it's less than current adjacent node distance
+   2. Set all adjacent nodes `new distance = cur distance (it's minimal) + edge distances`. Set only if it's less than current adjacent node distance
    3. Add all adjacent nodes to `pq` with updated distances
 
 #### Finding path
