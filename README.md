@@ -1,18 +1,10 @@
 # AlgoTips
 
-### Table of contents
-
-- [AlgoTips](#algotips)
-    - [Table of contents](#table-of-contents)
-  - [Greedy](#greedy)
-  - [Dijkstra's shortest path](#dijkstras-shortest-path)
-      - [Description](#description)
-      - [Finding path](#finding-path)
-
 ## Greedy
 
-- Sometimes we can do the things retrospectively:
-  - [1642. Furthest Building You Can Reach](https://leetcode.com/problems/furthest-building-you-can-reach/description/) - Setting all the ladders and than retrospectively substitute them with bricks
+### Sometimes we can do the things retrospectively:
+
+- [1642. Furthest Building You Can Reach](https://leetcode.com/problems/furthest-building-you-can-reach/description/) - Setting all the ladders and than retrospectively substitute them with bricks:
 
 ```py
 class Solution:
