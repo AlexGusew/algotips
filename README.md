@@ -8,7 +8,6 @@
 
 ```py
 class Solution:
-
     def furthestBuilding(self, heights: List[int], bricks: int, ladders: int) -> int:
         pq = []
         for i in range(len(heights) - 1):
