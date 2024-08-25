@@ -128,3 +128,9 @@ Resources:
 1. **BFS** (Breadth First Search) - search neighbors first
 1. **DLS** (Depth Limited Search) - DFS but with limited depth
 1. **IDDFS** (Iterative Deepening Depth First Search) - DLS with increasing depth limit (1, 2, 3, ...) until target is found
+
+## Prefix sums
+
+**Usecases:**
+
+- Find a number of continuous **Find a number of continuous subarrays/submatrices/tree paths that sum to target** paths that sum to target [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/description/) 
