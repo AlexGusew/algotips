@@ -125,7 +125,10 @@ Resources:
 ## Traversals
 
 1. **DFS** (Depth First Search) - search in depth
-1. **BFS** (Breadth First Search) - search neighbors first
+- **Preorder** - Used to clone tree
+- **Inorder** - Used to travense tree in BFS order (when traversing over BST, print nodes in sorted order)
+- **Postorder** - Used to delete tree
+2. **BFS** (Breadth First Search) - search neighbors first
 1. **DLS** (Depth Limited Search) - DFS but with limited depth
 1. **IDDFS** (Iterative Deepening Depth First Search) - DLS with increasing depth limit (1, 2, 3, ...) until target is found
 
