@@ -164,3 +164,14 @@ class Solution:
             cur = cur.next.next
         return head
 ```
+
+## Matrix 
+
+[Miro 🔗](https://miro.com/app/board/uXjVLeqOC3Q=/?share_link_id=441000358084)
+
+**Problems with matrices**
+
+1. Traverse in some order - [Spiral matrix](https://leetcode.com/problems/spiral-matrix-iv/description/)
+2. Transform matrix - [Rotate image (matrix rotation)](https://leetcode.com/problems/rotate-image/description/)
+3. Traverse on matrix as Graph (DFS, BFS, others) - [The Maze](https://leetcode.com/problems/the-maze/description/)
+4. DP on matrix - [Maximal Square](https://leetcode.com/problems/maximal-square/description/)
