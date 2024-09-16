@@ -136,4 +136,31 @@ Resources:
 
 **Usecases:**
 
-- Find a number of continuous **Find a number of continuous subarrays/submatrices/tree paths that sum to target** paths that sum to target [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/description/) 
+- Find a number of continuous **Find a number of continuous subarrays/submatrices/tree paths that sum to target** paths that sum to target [560. Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/description/)
+
+## Greatest Common Divisor (GCD)
+
+**Euclidean method** [🔗](https://en.wikipedia.org/wiki/Euclidean_algorithm)
+
+This method is based on the principle:
+> GCD doesn't change if we replace bigger number by difference of 2 numbers: `gcd(a, b) = gcd(a - b, b)`
+To make finding more efficient, `a - b` is changed to `a % b`:
+
+Example problem:
+
+**[2807. Insert Greatest Common Divisors in Linked List](https://leetcode.com/problems/insert-greatest-common-divisors-in-linked-list/description)**
+
+```py
+class Solution:
+    def insertGreatestCommonDivisors(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def get_gcd(a, b):
+            while b != 0:
+                a, b = b, a % b
+            return a
+        cur = head
+        while cur.next:
+            gcd = get_gcd(cur.val, cur.next.val)
+            cur.next = ListNode(gcd, cur.next)
+            cur = cur.next.next
+        return head
+```
