@@ -1,48 +1,41 @@
-# Usage of Bitwise operations in ReactJS
+# Usage of Bitwise Operations in ReactJS
 
-Exploring how ReactJS uses bitwise masks as well as bitwize operations.
+## Introduction
+React's internal implementation makes extensive use of bitwise operations and bitmasks for efficient state management and feature flagging. This post explores how and why React employs these low-level operations in its core functionality.
 
-### TL;DR
+## TL;DR
+React uses bitmasks extensively throughout its codebase, primarily because they enable fast and efficient checking of state inclusion and feature flags. Bitwise operations allow React to pack multiple boolean flags into a single integer, reducing memory usage and improving performance.
 
-React uses bitmasks extensively. Primary because it allows to check if some state includes in others fast and easyly.
-
-## `react-reconciler` Tags
+## Deep Dive into `react-reconciler`
 
 ### ReactFiberFlags
+The first notable example is the usage of bitmasks to define node types in React Fiber Tree. Within the Fiber implementation, node states like `Incomplete`, `NeedsPropagation`, and others are defined using bitmasks.
 
-First example is usage of bitmasks to define type of Nodes in React Fibler Tree. Here we see Node states are defined as bitmasks: `Incomplete`, `NeedsPropagation`, and others.
+Location: `packages/react-reconciler/src/ReactFiberFlags.js`
+![React Fiber Flags Implementation](image.png)
 
-> `packages/react-reconciler/src/ReactFiberFlags.js`
+These flags are then used to determine whether a subtree needs rerendering. Here's a key example from the reconciliation process:
 
-![alt text](image.png)
-
-Then it's used to check whether we need to rerender subtree or not by checking:
-
-```js
+```javascript
 const rootHasEffect =
     (finishedWork.flags &
         (BeforeMutationMask | MutationMask | LayoutMask | PassiveMask)) !==
     NoFlags;
 ```
+Location: `packages/react-reconciler/src/ReactFiberWorkLoop.js`
+![Work Loop Implementation](image-1.png)
 
-> `packages/react-reconciler/src/ReactFiberWorkLoop.js`
+Let's break down how this code works:
+1. First, it combines multiple masks using the `OR` operator (`|`): `BeforeMutationMask | MutationMask | LayoutMask | PassiveMask`
+2. Then, it performs a bitwise `AND` (`&`) between `finishedWork.flags` and the combined masks
+3. Finally, it checks if the result is not equal to `NoFlags` (which is zero or `0b0`)
+4. If the node flags have no common flags with our search masks, the check evaluates to `0 !== 0`, returning `false`
 
-![alt text](image-1.png)
+### React Running Modes
+React also uses bitmasks to specify its running modes:
+![React Running Modes](image-2.png)
 
-Let's understand this code.
-
-First, `OR` of `BeforeMutationMask | MutationMask | LayoutMask | PassiveMask` is found. The masks of corresponding values combine in one. Those are flags which we check current node flags on.
-
-Then, bitwise `AND` is performed between `finishedWork.flags` and our combined flags. Since `AND` produce `1` only if same bit in both values is `1`, we'll find intersection of node flags with our newly computed bitmask.
-
-As last part, we check if result of `AND` is not blank (`NoFlags` is zero or `0` or `0b0`). So if node flags have no common flags with our searched masks, our check evaluates to `0 !== 0` which returns `false`.
-
-### React running mode
-
-Along with Node tags, bitmasks are used to specify React running mode:
-![alt text](image-2.png) 
-
-We can se that inetrnally React has 7 modes!
+React internally supports seven distinct modes:
 - NoMode
 - ConcurrentMode
 - ProfileMode
@@ -51,30 +44,33 @@ We can se that inetrnally React has 7 modes!
 - StrictEffectsMode
 - NoStrictPassiveEffectsMode
 
-To check if fiber node is in debug mode, they check `sourceFiber.mode & DebugTracingMode` which will result in non-zero value in case `sourceFiber.mode` contains `DebugTracingMode`'s bit.
-![alt text](image-3.png)
+To check if a fiber node is in debug mode, React performs a bitwise `AND` operation:
+```javascript
+sourceFiber.mode & DebugTracingMode
+```
+![Debug Mode Check](image-3.png)
 
-What neat here, is how easy they combine fiber node modes together via bitwise `OR` operator:
-![alt text](image-4.png)
+One elegant aspect is how easily React combines fiber node modes using the bitwise `OR` operator:
+![Combining Modes](image-4.png)
 
-### Event types
+### Event Types
+React's event system also leverages bitmasks for flag management:
+![Event System Flags](image-5.png)
 
-Moreover, React uses bitmasks to define event system flags:
-![alt text](image-5.png)
+These flags are used in two primary ways:
+1. Adding modes using the `OR` operation
+2. Checking for specific modes using the `AND` operation:
+![Event Type Usage](image-6.png)
 
-Then they use the flags the same way as in previous cases:
-- Adding mode to current event with `OR` operation
-- Chekcing on specific mode with `AND` like this:
-  ![alt text](image-6.png)
+Interesting observations:
+- Event types use left shift notation (`1 << 2`) instead of explicit binary notation (`0b0000000100000000000000000000`)
+- The `IS_PASSIVE` event type exists in the codebase but is currently unused in the React monorepo
 
-> Interestingly, in eventy types the modes are written via bit left shifts `1 << 2`, in in contrary to previous example, where masks were written explicitly `0b0000000100000000000000000000`
+## Notable Exception: Scheduler Priorities
+Interestingly, React's scheduler priorities don't use bitmasks:
+![Scheduler Priorities](image-7.png)
 
-> Also, I found funny that `IS_PASSIVE` event type is not used in React monorepo at all!
+This design choice makes sense because priorities require comparison operations (greater than, less than) rather than set inclusion checks. While it would be possible to implement priorities using bitmasks, simple numeric values are more appropriate for this use case.
 
-### Worth to mention
-
-React scheduler has priorities for each task to render. When I started looking at React codebase, I expected to see them first as bitmasks. But how I was surprised, when actually they are not:
-> `packages/scheduler/src/SchedulerPriorities.js`
-![alt text](image-7.png)
-
-But after a little of thinking, it's obvious why priorities are not bitmasks. The operation with proprities we need to perform is comparison with other propritis: whether one's bigger than the other. But bitmasks help us when we need to easily include or exclude value from the set. So, while it would be possible to have proproties as bitmasks, simple numbers work sufficiently for this case.
+## Summary
+React's use of bitwise operations demonstrates thoughtful performance optimization. Bitmasks are employed when checking for feature inclusion or state combinations, while simpler numeric values are used for comparative operations like priority scheduling. This selective use of bitwise operations shows how React's internal architecture carefully chooses the right tool for each specific requirement.
